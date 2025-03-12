@@ -9,13 +9,14 @@ const GAMEWIDTH = 500;
 const PLAYER_HEIGHT = 25;
 const PLAYER_WIDTH = 25;
 const PLAYERSIZE = 75;
+const PLAYERSPEED = 5;
 /*******************************************************/
 //SETUP
 
 function setup() {
     cnv = new Canvas(GAMEWIDTH, GAMEHEIGHT)
-    player = new Sprite((GAMEWIDTH/2), (GAMEHEIGHT/2), PLAYERSIZE, PLAYERSIZE, 'd');
-    player.color = 'black';
+    stickman = new Sprite((GAMEWIDTH/2), (GAMEHEIGHT/2), PLAYERSIZE, PLAYERSIZE, 'd');
+    stickman.color = 'black';
 }
 
 /*******************************************************/
@@ -23,5 +24,36 @@ function setup() {
 
 function draw(){
     background('white');
+    movement();
 }
+/*******************************************************/
+//FUNCTIONS
+function movement(){
+      // Movement logic
+  if (kb.pressing('left')) {
+    stickman.vel.x = -PLAYERSPEED;
+  } else if (kb.pressing('right')) {
+    stickman.vel.x = PLAYERSPEED;
+  }
+
+  if (kb.released('left')) {
+    stickman.vel.x = 0;
+  } else if (kb.released('right')) {
+    stickman.vel.x = 0;
+  }
+
+  if (kb.pressing('up')) {
+    stickman.vel.y = -PLAYERSPEED;
+  } else if (kb.pressing('down')) {
+    stickman.vel.y = PLAYERSPEED;
+  }
+
+  if (kb.released('up')) {
+    stickman.vel.y = 0;
+  } else if (kb.released('down')) {
+    stickman.vel.y = 0;
+  }
+
+}
+
 /*******************************************************/

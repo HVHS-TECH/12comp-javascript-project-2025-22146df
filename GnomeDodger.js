@@ -8,8 +8,13 @@ const GAMEHEIGHT = 500;
 const GAMEWIDTH = 500;
 const PLAYER_HEIGHT = 25;
 const PLAYER_WIDTH = 25;
-const PLAYERSIZE = 75;
+const PLAYERSIZE = 25;
 const PLAYERSPEED = 5;
+const GNOMESIZE = 200;
+
+let gnomex;
+let gnomey;
+
 /*******************************************************/
 //SETUP
 
@@ -17,6 +22,10 @@ function setup() {
     cnv = new Canvas(GAMEWIDTH, GAMEHEIGHT)
     stickman = new Sprite((GAMEWIDTH/2), (GAMEHEIGHT/2), PLAYERSIZE, PLAYERSIZE, 'd');
     stickman.color = 'black';
+
+    let gnomey = (random(1,499));
+    let gnomex = (random(1,499));
+    gnomeMaker();
 }
 
 /*******************************************************/
@@ -53,7 +62,12 @@ function movement(){
   } else if (kb.released('down')) {
     stickman.vel.y = 0;
   }
-
 }
 
+
+function gnomeMaker(){
+    //make the gnome at a random point on the border
+    gnome = new Sprite((0, gnomex), (0, gnomey), GNOMESIZE,'k');
+    gnome.color = 'red';
+}
 /*******************************************************/

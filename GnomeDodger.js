@@ -18,6 +18,9 @@ const WALLTHICK = 5;
 
 let gnomex;
 let gnomey;
+let score = 0;
+let startTime;
+
 
 
 /*******************************************************/
@@ -28,22 +31,28 @@ function setup() {
     stickman = new Sprite((GAMEWIDTH/2), (GAMEHEIGHT/2), PLAYERSIZE, PLAYERSIZE, 'd');
     stickman.color = 'black';
 
+    startTime = millis(); //setting the starting time 
+
     //let gnomey = (random(1,499));
     //let gnomex = (random(1,499));
     gnomeMakerH();
     gnomeMakerV();
 
-    Lwall = new Sprite (0, (GAMEHEIGHT/2), GAMEHEIGHT, 5, 'k')
-    Lwall.color = 'black';
-    Rwall = new Sprite (500, (GAMEHEIGHT/2), 5, 'k')
-    Rwall.color = 'black';
-    Twall = new Sprite ((GAMEWIDTH/2), 0, 5, 'k')
-    Twall.color = 'black';
-    Bwall = new Sprite ((GAMEWIDTH/2), 500, 5, 'k')
-    
-}
+ /*******************************************************************************************/
+ //WALLS
+Lwall = new Sprite(0, (GAMEHEIGHT/2), 5, GAMEHEIGHT, 'k');  //Left wall
+Lwall.color = 'black';
 
-/*******************************************************/
+Rwall = new Sprite(500, (GAMEHEIGHT/2), 5, GAMEHEIGHT, 'k'); //Right wall 
+Rwall.color = 'black';
+
+Twall = new Sprite((GAMEWIDTH/2), 0, GAMEWIDTH, 5, 'k'); //Top wall 
+Twall.color = 'black';
+
+Bwall = new Sprite((GAMEWIDTH/2), 500, GAMEWIDTH, 5, 'k'); //Bottom wall
+Bwall.color = 'black';
+}
+/*******************************************************************************************/
 //GAME
 
 function draw(){
@@ -51,6 +60,8 @@ function draw(){
     movement();
     gnomeDetectH();
     gnomeDetectV();
+    displayScore();
+    displayTimer();
 
    
 }
@@ -104,8 +115,10 @@ function gnomeMakerH(){
 function gnomeDetectV(){
   if (gnomeV.y>GAMEHEIGHT){
     console.log("bottom");
+    //detect once gnome has reached the perimeter of gamewindow
     gnomeV.remove();
     gnomeMakerV();
+    score++;
   } else{
     console.log("TOP");
   }
@@ -113,10 +126,25 @@ function gnomeDetectV(){
 function gnomeDetectH(){
   if (gnomeH.x>GAMEWIDTH){
     console.log("inside");
+    //detect once gnome has reached the perimeter of gamewindow
     gnomeH.remove();
     gnomeMakerH();
+    score++;
   } else{
     console.log("RIGHTWALL");
   }
+}
+
+function displayScore(){
+  fill(0, 0, 0);
+  textSize(20);
+  text("Score: " + score, 5 ,30);
+}
+
+function displayTimer() {
+  let elapsedTime = floor((millis() - startTime) / 1000); // Converting milliseconds to seconds
+  fill(0, 0, 0);
+  textSize(20);
+  text("Time: " + elapsedTime + "s", 5, 55);
 }
 /*******************************************************/

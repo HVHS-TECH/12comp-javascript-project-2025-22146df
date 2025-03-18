@@ -20,6 +20,9 @@ let gnomex;
 let gnomey;
 let score = 0;
 let startTime;
+let timeLimit = 5;
+let remainingTime;
+let elapsedTime;
 
 
 
@@ -143,8 +146,30 @@ function displayScore(){
 
 function displayTimer() {
   let elapsedTime = floor((millis() - startTime) / 1000); // Converting milliseconds to seconds
+  let remainingTime = max(timeLimit - elapsedTime, 0)
   fill(0, 0, 0);
   textSize(20);
-  text("Time: " + elapsedTime + "s", 5, 55);
+  text("Time: " + remainingTime + "s left!", 5, 55);
+
+  if (remainingTime === 0){
+    endGame();
+  }
 }
+
+function endGame() {
+  background("red"); 
+  fill(0); // Set text color to black
+  textSize(15);
+  textAlign(CENTER, CENTER); // Center the text 
+  text("You died after " + elapsedTime + "s, and dodged" + score + "gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+}
+
+/*******************************************************/
+//TO DO
+
+// function getElapsedTime() {
+ // return floor((millis() - startTime) / 1000); 
+//}
+/*******************************************************/
+//END OF GAME
 /*******************************************************/

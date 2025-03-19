@@ -18,11 +18,12 @@ const WALLTHICK = 5;
 
 let gnomex;
 let gnomey;
+var gameOver = (false);
 let score = 0;
-let startTime;
-let timeLimit = 5;
-let remainingTime;
-let elapsedTime;
+var startTime;
+var timeLimit = 5;
+var remainingTime;
+var elapsedTime;
 
 
 
@@ -117,24 +118,23 @@ function gnomeMakerH(){
 
 function gnomeDetectV(){
   if (gnomeV.y>GAMEHEIGHT){
-    console.log("bottom");
     //detect once gnome has reached the perimeter of gamewindow
     gnomeV.remove();
     gnomeMakerV();
     score++;
   } else{
-    console.log("TOP");
+  
   }
 }
 function gnomeDetectH(){
   if (gnomeH.x>GAMEWIDTH){
-    console.log("inside");
+ 
     //detect once gnome has reached the perimeter of gamewindow
     gnomeH.remove();
     gnomeMakerH();
     score++;
   } else{
-    console.log("RIGHTWALL");
+
   }
 }
 
@@ -145,11 +145,13 @@ function displayScore(){
 }
 
 function displayTimer() {
-  let elapsedTime = floor((millis() - startTime) / 1000); // Converting milliseconds to seconds
-  let remainingTime = max(timeLimit - elapsedTime, 0)
+  if (gameOver) return;
+  elapsedTime = floor((millis() - startTime) / 1000); // Converting milliseconds to seconds
+  var remainingTime = max(timeLimit - elapsedTime, 0)
   fill(0, 0, 0);
   textSize(20);
   text("Time: " + remainingTime + "s left!", 5, 55);
+  console.log (elapsedTime);
 
   if (remainingTime === 0){
     endGame();
@@ -157,11 +159,21 @@ function displayTimer() {
 }
 
 function endGame() {
+  if (gameOver) return;
+
+  gameOver = (true);
   background("red"); 
   fill(0); // Set text color to black
   textSize(15);
   textAlign(CENTER, CENTER); // Center the text 
-  text("You died after " + elapsedTime + "s, and dodged" + score + "gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+  console.log (elapsedTime);
+  text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+
+  stickman.remove;
+  gnomeH.remove;
+  gnomeV.remove;
+
+  noLoop(); //found noLoop online 
 }
 
 /*******************************************************/

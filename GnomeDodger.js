@@ -18,6 +18,8 @@ const WALLTHICK = 5;
 
 let gnomex;
 let gnomey;
+let gameState = "start";
+let startButton;
 var gameOver = (false);
 let score = 0;
 var startTime;
@@ -39,8 +41,7 @@ function setup() {
 
     //let gnomey = (random(1,499));
     //let gnomex = (random(1,499));
-    gnomeMakerH();
-    gnomeMakerV();
+
 
  /*******************************************************************************************/
  //WALLS
@@ -55,17 +56,30 @@ Twall.color = 'black';
 
 Bwall = new Sprite((GAMEWIDTH/2), 500, GAMEWIDTH, 5, 'k'); //Bottom wall
 Bwall.color = 'black';
+
+    // Create the Start Button
+    startButton = createButton("START");
+    startButton.position(width/2, height/2); // Center the button
+    startButton.style("font-size", "24px");
+    startButton.style("font-weight", "bold");
+    startButton.style("padding", "10px 20px");
+    startButton.style("background-color", "#4CAF50"); // Green button
+    startButton.style("color", "white");
+    startButton.style("border", "none");
+    startButton.style("cursor", "pointer");
+    startButton.mousePressed(startGame);
+    let buttonWidth = 140;  // Approximate width based on padding & font size
+    let buttonHeight = 50;  // Approximate height
+    startButton.position(width / 2 - buttonWidth / 2, height / 2 + buttonHeight);
 }
 /*******************************************************************************************/
 //GAME
 
 function draw(){
-    background('white');
-    movement();
-    gnomeDetectH();
-    gnomeDetectV();
-    displayScore();
-    displayTimer();
+   if (gameState === 'start'){
+    startScreen();
+  } else if (gameState === 'playing')
+    runGame();
 
    
 }
@@ -174,6 +188,33 @@ function endGame() {
   gnomeV.remove;
 
   noLoop(); //found noLoop online 
+}
+
+function startScreen(){
+  background.color = ("#A7C7E7");
+
+    fill(0);
+    textSize(30);
+    textAlign(CENTER, CENTER);
+    text("Gnome Dodger", width / 2, height / 3);
+
+}
+
+function startGame(){
+  gameState = 'playing';
+  startTime = millis();
+  startButton.remove;
+}
+
+function runGame(){
+  //gnomeMakerH();
+  //gnomeMakerV();
+  background('white');
+  movement();
+  gnomeDetectH();
+  gnomeDetectV();
+  displayScore();
+  displayTimer();
 }
 
 /*******************************************************/

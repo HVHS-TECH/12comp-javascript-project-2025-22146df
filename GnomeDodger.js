@@ -177,7 +177,7 @@ function endGame() {
 
   gameOver = (true);
   background("red"); 
-  fill(0); // Set text color to black
+  fill(0); // Set text colour to black
   textSize(15);
   textAlign(CENTER, CENTER); // Center the text 
   console.log (elapsedTime);
@@ -198,12 +198,18 @@ function startScreen(){
     textAlign(CENTER, CENTER);
     text("Gnome Dodger", width / 2, height / 3);
 
+    //INSTRUCTIONS TEXT
+    fill(0); // text colour black again
+    textSize(20);
+    text("Instructions: The aim of the game is \nto dodge as many gnomes as you \ncan for 15 seconds, moving with the \narrow OR WASD keys. \nCan you do it?", 
+      width / 2, height / 3 + 200,); 
 }
+    
 
 function startGame(){
   gameState = 'playing';
   startTime = millis();
-  startButton.remove;
+  startButton.remove();
 }
 
 function runGame(){

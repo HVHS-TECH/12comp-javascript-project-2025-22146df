@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [5,10,15,20];
+const GNOMESPEED = [2,5,10,11,12,15,100];
 const WALLTHICK = 5;
 
 let gnomex;
@@ -27,6 +27,10 @@ var timeLimit = 5;
 var remainingTime;
 var elapsedTime;
 
+
+
+var gnomesH = [];
+var gnomesV = [];
 
 
 /*******************************************************/
@@ -113,86 +117,90 @@ function movement(){
 }
 
 
-function gnomeMakerV(){
-    //make the gnome at a random point on the border at the top
-    let speedV = random(GNOMESPEED); // pick random speed from speed array
-    gnomeV = new Sprite(random(5,495), GNOME_Y, GNOMESIZE,'k');
-    gnomeV.color = 'red';
-    gnomeV.vel.y = speedV;
-
+function gnomeMakerH() {
+  while (gnomesH.length < 5) { // Keep spawning until we have 5 gnomes
+      let gnomeH = new Sprite(GNOME_X, random(5, 495), GNOMESIZE, 'k');
+      gnomeH.color = 'red';
+      gnomeH.vel.x = random(GNOMESPEED);
+      gnomesH.push(gnomeH);
+  }
 }
-
-function gnomeMakerH(){
-     //make the gnome at a random point on the border
-     let speedH = random(GNOMESPEED); // pick random speed from speed array
-     gnomeH = new Sprite(GNOME_X, random(5,495), GNOMESIZE,'k');
-     gnomeH.color = 'red';
-     gnomeH.vel.x = speedH;
-}
-
-function gnomeDetectV(){
-  if (gnomeV.y>GAMEHEIGHT){
-    //detect once gnome has reached the perimeter of gamewindow
-    gnomeV.remove();
-    gnomeMakerV();
-    score++;
-  } else{
+function gnomeDetectH() {
+  for (let i = gnomesH.length - 1; i >= 0; i--) { 
+      if (gnomesH[i].x > GAMEWIDTH) { // If gnome moves off screen
+          gnomesH[i].remove(); 
+          gnomesH.splice(i, 1); // Remove from array
+          score++;
+      }
+  }
+  gnomeMakerH(); // Ensure 5 gnomes exist after checking
   
-  }
-}
-function gnomeDetectH(){
-  if (gnomeH.x>GAMEWIDTH){
- 
-    //detect once gnome has reached the perimeter of gamewindow
-    gnomeH.remove();
-    gnomeMakerH();
-    score++;
-  } else{
-
-  }
 }
 
-function displayScore(){
+function gnomeDetectV() {
+  for (let i = gnomesV.length - 1; i >= 0; i--) {
+      if (gnomesV[i].y > GAMEHEIGHT) { // If gnome moves off screen
+          gnomesV[i].remove();
+          gnomesV.splice(i, 1);
+          score++;
+      }
+  }
+  gnomeMakerV(); // Ensure 5 gnomes exist after checking
+  
+}
+function gnomeMakerV() {
+  while (gnomesV.length < 5) { // Keep spawning until we have 5 gnomes
+      let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k'); // Spawn at the top
+      gnomeV.color = 'blue';
+      gnomeV.vel.y = random(GNOMESPEED);
+      gnomesV.push(gnomeV);
+  }
+}
+
+function displayScore() {
   fill(0, 0, 0);
   textSize(20);
-  text("Score: " + score, 5 ,30);
+  text("Score: " + score, GAMEWIDTH - 400, 30); // Move right
 }
 
 function displayTimer() {
   if (gameOver) return;
-  elapsedTime = floor((millis() - startTime) / 1000); // Converting milliseconds to seconds
-  var remainingTime = max(timeLimit - elapsedTime, 0)
+  elapsedTime = floor((millis() - startTime) / 1000); // Convert milliseconds to seconds
+  var remainingTime = max(timeLimit - elapsedTime, 0);
   fill(0, 0, 0);
   textSize(20);
-  text("Time: " + remainingTime + "s left!", 5, 55);
-  console.log (elapsedTime);
+  text("Time: " + remainingTime + "s left!", GAMEWIDTH - 400, 55); // Move right
+  console.log(elapsedTime);
 
   if (remainingTime === 0){
-    endGame();
+    winGame();
   }
 }
 
 function endGame() {
-  if (gameOver) return;
+  if (gameOver) return; // Prevent running twice
 
-  gameOver = (true);
+  gameOver = true;
   background("red"); 
-  fill(0); // Set text colour to black
+  fill(0); // Set text color to black
   textSize(15);
-  textAlign(CENTER, CENTER); // Center the text 
-  console.log (elapsedTime);
+  textAlign(CENTER, CENTER);
   text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-
-  stickman.remove;
-  gnomeH.remove;
-  gnomeV.remove;
-
-  noLoop(); //found noLoop online 
+  for (let i = 0; i < gnomesH.length; i++) {
+      gnomesH[i].remove();
+  }
+  gnomesH = [];
+  for (let i = 0; i < gnomesV.length; i++) {
+      gnomesV[i].remove();
+  }
+  gnomesV = [];
+  stickman.remove();
+  noLoop(); // Stop
 }
+
 
 function startScreen(){
   background.color = ("#A7C7E7");
-
     fill(0);
     textSize(30);
     textAlign(CENTER, CENTER);
@@ -213,14 +221,53 @@ function startGame(){
 }
 
 function runGame(){
-  //gnomeMakerH();
-  //gnomeMakerV();
+  gnomeMakerH();
+  gnomeMakerV();
   background('white');
   movement();
   gnomeDetectH();
   gnomeDetectV();
   displayScore();
   displayTimer();
+  gnomeTouch();
+}
+
+function gnomeTouch() {
+  for (let i = 0; i < gnomesH.length; i++) {
+    if (stickman.collide(gnomesH[i])) {
+      endGame(); // End the game if collision detected
+      return; 
+    }
+  }
+
+  for (let i = 0; i < gnomesV.length; i++) {
+    if (stickman.collide(gnomesV[i])) {
+      endGame(); // End the game if collision detected
+      return; 
+    }
+  }
+}
+
+function winGame() {
+  if (gameOver) return; // Prevent running multiple times
+
+  gameOver = true;
+  background("gold"); 
+  fill(0); // Set text color to black
+  textSize(20);
+  textAlign(CENTER, CENTER);
+  text("YOU WIN!\nYou dodged " + score + " gnomes\nDuring " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+
+  stickman.remove(); 
+  for (let i = 0; i < gnomesH.length; i++) {
+    gnomesH[i].remove();
+  }
+  gnomesH = []; 
+  for (let i = 0; i < gnomesV.length; i++) {
+    gnomesV[i].remove();
+  }
+  gnomesV = [];
+  noLoop(); // Stop the game loop
 }
 
 /*******************************************************/

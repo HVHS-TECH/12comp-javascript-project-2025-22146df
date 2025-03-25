@@ -186,16 +186,12 @@ function endGame() {
   textSize(15);
   textAlign(CENTER, CENTER);
   text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-  for (let i = 0; i < gnomesH.length; i++) {
-      gnomesH[i].remove();
-  }
-  gnomesH = [];
-  for (let i = 0; i < gnomesV.length; i++) {
-      gnomesV[i].remove();
-  }
-  gnomesV = [];
-  stickman.remove();
-  noLoop(); // Stop
+  text("Press R to Restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
+  allSprites.remove();
+
+
+  noLoop(); // found noLoop and Loop through GPT
+
 }
 
 
@@ -215,14 +211,17 @@ function startScreen(){
     
 
 function startGame(){
+  background("white");
   gameState = 'playing';
   startTime = millis();
   startButton.remove();
 }
 
 function runGame(){
-  gnomeMakerH();
-  gnomeMakerV();
+  if (frameCount % 60 === 0) { 
+    gnomeMakerH();
+    gnomeMakerV();
+  }
   background('white');
   movement();
   gnomeDetectH();
@@ -258,6 +257,8 @@ function winGame() {
   textAlign(CENTER, CENTER);
   text("YOU WIN!\nYou dodged " + score + " gnomes\nDuring " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
 
+  text("Press R to Restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
+
   stickman.remove(); 
   for (let i = 0; i < gnomesH.length; i++) {
     gnomesH[i].remove();
@@ -268,6 +269,50 @@ function winGame() {
   }
   gnomesV = [];
   noLoop(); // Stop the game loop
+}
+
+function keyPressed() {
+  if (key === 'r' || key === 'R') { //R = restart button
+    restartGame();
+  }
+}
+
+function restartGame() {
+  background("white");
+  allSprites.remove();
+  gameOver = false; 
+  score = 0;
+  startTime = millis();  
+
+  Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');  // Left wall
+  Lwall.color = 'black';
+
+  Rwall = new Sprite(500, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k'); // Right wall
+  Rwall.color = 'black';
+
+  Twall = new Sprite((GAMEWIDTH / 2), 0, GAMEWIDTH, 5, 'k'); // Top wall
+  Twall.color = 'black';
+
+  Bwall = new Sprite((GAMEWIDTH / 2), 500, GAMEWIDTH, 5, 'k'); // Bottom wall
+  Bwall.color = 'black';
+
+
+  startButton = createButton("START");
+  startButton.position(width / 2 - 70, height / 2 + 100); // Position the button
+  startButton.style("font-size", "24px");
+  startButton.style("font-weight", "bold");
+  startButton.style("padding", "10px 20px");
+  startButton.style("background-color", "#4CAF50");
+  startButton.style("color", "white");
+  startButton.style("border", "none");
+  startButton.style("cursor", "pointer");
+  startButton.mousePressed(startGame);
+  
+  gameState = "start";  
+  gnomeMakerH();
+  gnomeMakerV();
+
+  loop(); // Resume the game loop
 }
 
 /*******************************************************/

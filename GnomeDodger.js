@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [2, 5, 10, 11, 12, 15, 100];
+const GNOMESPEED = [2, 5, 10,];
 const WALLTHICK = 5;
 
 let gnomex;
@@ -148,7 +148,7 @@ function endGame() {
   textSize(15);
   textAlign(CENTER, CENTER);
   text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-  text("Press R to Restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
+  text("Restart out of order please refresh", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
   allSprites.remove();
 
 
@@ -226,7 +226,7 @@ function winGame() {
   textAlign(CENTER, CENTER);
   text("YOU WIN!\nYou dodged " + score + " gnomes\nDuring " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
 
-  text("Press R to Restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
+  text("Restart unavailable right now please", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
 
   stickman.remove();
   for (let i = 0; i < gnomesH.length; i++) {

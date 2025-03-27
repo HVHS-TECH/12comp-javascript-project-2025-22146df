@@ -20,6 +20,8 @@ let gnomex;
 let gnomey;
 var gameOver = (false);
 let score = 0;
+let stickman;
+let Lwall;
 var startTime;
 var timeLimit = 5;
 var remainingTime;
@@ -80,11 +82,13 @@ function movement() {
 
 
 function gnomeMakerH() {
-  while (gnomesH.length < 5) { // Keep spawning until we have 5 gnomes
+  console.log("this is running");
+   for (let i = gnomesH.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
     let gnomeH = new Sprite(GNOME_X, random(5, 495), GNOMESIZE, 'k');
     gnomeH.color = 'red';
     gnomeH.vel.x = random(GNOMESPEED);
     gnomesH.push(gnomeH);
+    console.log("status:" + gnomeH);
   }
 }
 function gnomeDetectH() {
@@ -111,11 +115,13 @@ function gnomeDetectV() {
 
 }
 function gnomeMakerV() {
-  while (gnomesV.length < 5) { // Keep spawning until we have 5 gnomes
+  console.log("this is running");
+  for (let i = gnomesV.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
     let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k'); // Spawn at the top
     gnomeV.color = 'blue';
     gnomeV.vel.y = random(GNOMESPEED);
     gnomesV.push(gnomeV);
+    console.log("status:" + gnomeV);
   }
 }
 
@@ -138,24 +144,6 @@ function displayTimer() {
     winGame();
   }
 }
-
-function endGame() {
-  if (gameOver) return; // Prevent running twice
-
-  gameOver = true;
-  background("red");
-  fill(0); // Set text color to black
-  textSize(15);
-  textAlign(CENTER, CENTER);
-  text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-  text("Restart out of order please refresh", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
-  allSprites.remove();
-
-
-  noLoop(); // found noLoop and Loop through GPT
-
-}
-
 
 function startScreen() {
   console.log("startScreen")
@@ -187,10 +175,9 @@ function startGame() {
 }
 
 function runGame() {
-  if (frameCount % 60 === 0) {
-    gnomeMakerH();
-    gnomeMakerV();
-  }
+  gnomeMakerH();
+  gnomeMakerV();
+  console.log("gnomes have been spawned");
   background('white');
   movement();
   gnomeDetectH();
@@ -224,7 +211,7 @@ function winGame() {
   fill(0); // Set text color to black
   textSize(20);
   textAlign(CENTER, CENTER);
-  text("YOU WIN!\nYou dodged " + score + " gnomes\nDuring " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+  text("YOU WIN!\nYou dodged " + score + " gnomes\nover " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
 
   text("Restart unavailable right now please", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
 
@@ -240,6 +227,32 @@ function winGame() {
   noLoop(); // Stop the game loop
 }
 
+function endGame() {
+  if (gameOver) return; // Prevent running twice
+
+  gameOver = true;
+  background("red");
+  fill(0); // Set text color to black
+  textSize(15);
+  textAlign(CENTER, CENTER);
+  text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
+  text("Restart out of order please refresh", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
+  stickman.remove();
+  for (let i = 0; i < gnomesH.length; i++) {
+    gnomesH[i].remove();
+  }
+  gnomesH = [];
+  for (let i = 0; i < gnomesV.length; i++) {
+    gnomesV[i].remove();
+  }
+  gnomesV = [];
+
+
+  noLoop(); // found noLoop and Loop through GPT
+
+}
+
+
 function keyPressed() {
   if (key === 'r' || key === 'R') { //R = restart button
     restartGame();
@@ -248,38 +261,41 @@ function keyPressed() {
 
 function restartGame() {
   background("white");
+  gameOver = false;
   allSprites.remove();
-
-  startTime = millis();
-
   
   gameSetup();
+  loop();
 }
 
 function gameSetup() {
-  gameState = "setup";
-  if (gameState == "setup"){
   console.log("setting up game");
+  console.log("Stickman:", stickman);
+  console.log("Lwall:", Lwall); // Debugging log
+  gameState = "setup"; 
   stickman = new Sprite((GAMEWIDTH / 2), (GAMEHEIGHT / 2), PLAYERSIZE, PLAYERSIZE, 'd');
   stickman.color = 'black';
 
-  Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');  //Left wall
+  Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
   Lwall.color = 'black';
 
-  Rwall = new Sprite(500, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k'); //Right wall 
+  Rwall = new Sprite(500, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
   Rwall.color = 'black';
 
-  Twall = new Sprite((GAMEWIDTH / 2), 0, GAMEWIDTH, 5, 'k'); //Top wall 
+  Twall = new Sprite((GAMEWIDTH / 2), 0, GAMEWIDTH, 5, 'k');
   Twall.color = 'black';
 
-  Bwall = new Sprite((GAMEWIDTH / 2), 500, GAMEWIDTH, 5, 'k'); //Bottom wall
+  Bwall = new Sprite((GAMEWIDTH / 2), 500, GAMEWIDTH, 5, 'k');
   Bwall.color = 'black';
+
   gameOver = false;
   score = 0;
-  startTime = millis(); //setting the starting time 
+  startTime = millis(); // Reset timer
+  
   gameState = "start";
-  }
+  console.log("Game state after setup:", gameState); // Checking if gameState swaps to "start"
 }
+
 /*******************************************************/
 //TO DO
 

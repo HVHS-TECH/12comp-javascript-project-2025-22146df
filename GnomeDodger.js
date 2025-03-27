@@ -213,7 +213,7 @@ function winGame() {
   textAlign(CENTER, CENTER);
   text("YOU WIN!\nYou dodged " + score + " gnomes\nover " + elapsedTime + "s!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
 
-  text("Restart unavailable right now please", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
+  text("Press R to restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
 
   stickman.remove();
   for (let i = 0; i < gnomesH.length; i++) {
@@ -236,7 +236,7 @@ function endGame() {
   textSize(15);
   textAlign(CENTER, CENTER);
   text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-  text("Restart out of order please refresh", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
+  text("Press R to restart", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
   stickman.remove();
   for (let i = 0; i < gnomesH.length; i++) {
     gnomesH[i].remove();

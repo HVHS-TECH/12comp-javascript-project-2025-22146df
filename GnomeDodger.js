@@ -36,6 +36,11 @@ var gnomesV = [];
 /*******************************************************/
 //SETUP
 
+function preload(){
+  imgPlayer   = loadImage('/images/stickmangame.png');
+  imgGnome    = loadImage('/images/gnome.png');
+}
+
 function setup() {
   cnv = new Canvas(GAMEWIDTH, GAMEHEIGHT);
   gameSetup();
@@ -86,6 +91,8 @@ function gnomeMakerH() {
    for (let i = gnomesH.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
     let gnomeH = new Sprite(GNOME_X, random(5, 495), GNOMESIZE, 'k');
     gnomeH.color = 'red';
+    gnomeH.image = (imgGnome);
+    imgGnome.resize(GNOMESIZE,GNOMESIZE);
     gnomeH.vel.x = random(GNOMESPEED);
     gnomesH.push(gnomeH);
     console.log("status:" + gnomeH);
@@ -117,7 +124,9 @@ function gnomeDetectV() {
 function gnomeMakerV() {
   console.log("this is running");
   for (let i = gnomesV.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
-    let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k'); // Spawn at the top
+    let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k'); // Spawn at the top\
+    gnomeV.image = (imgGnome);
+    imgGnome.resize(GNOMESIZE,GNOMESIZE);
     gnomeV.color = 'blue';
     gnomeV.vel.y = random(GNOMESPEED);
     gnomesV.push(gnomeV);
@@ -275,6 +284,8 @@ function gameSetup() {
   gameState = "setup"; 
   stickman = new Sprite((GAMEWIDTH / 2), (GAMEHEIGHT / 2), PLAYERSIZE, PLAYERSIZE, 'd');
   stickman.color = 'black';
+  stickman.image = (imgPlayer);
+  imgPlayer.resize(PLAYERSIZE + 5,PLAYERSIZE + 5);
 
   Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
   Lwall.color = 'black';

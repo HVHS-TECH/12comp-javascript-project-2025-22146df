@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [2, 5, 10,];
+const GNOMESPEED = [1, 2, 2.5, 4, 5, 6, 7, 8, 9, 10,];
 const WALLTHICK = 5;
 
 let gnomex;
@@ -36,9 +36,10 @@ var gnomesV = [];
 /*******************************************************/
 //SETUP
 
-function preload(){
-  imgPlayer   = loadImage('/images/stickmangame.png');
-  imgGnome    = loadImage('/images/gnome.png');
+function preload() {
+  imgPlayer = loadImage('/images/stickmangame.png');
+  imgGnome = loadImage('/images/gnome.png');
+  imgBG = loadImage('/images/Grassbg.jpg')
 }
 
 function setup() {
@@ -49,6 +50,7 @@ function setup() {
 //GAME
 
 function draw() {
+
   if (gameState === 'start') {
     startScreen();
   } else if (gameState === 'playing')
@@ -58,6 +60,7 @@ function draw() {
 }
 /*******************************************************/
 //FUNCTIONS
+//PLAYER FUNCTIONS
 function movement() {
   // Movement logic
   if (kb.pressing('left')) {
@@ -85,16 +88,34 @@ function movement() {
   }
 }
 
+function gnomeTouch() {
+  for (let i = 0; i < gnomesH.length; i++) {
+    if (stickman.collide(gnomesH[i])) {
+      endGame(); // End the game if collision detected
+      return;
+    }
+  }
 
+  for (let i = 0; i < gnomesV.length; i++) {
+    if (stickman.collide(gnomesV[i])) {
+      endGame(); // End the game if collision detected
+      return;
+    }
+  }
+}
+
+/**********************************************************/
+//GNOME FUNCTIONS
 function gnomeMakerH() {
   console.log("this is running");
-   for (let i = gnomesH.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
+  for (let i = gnomesH.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
     let gnomeH = new Sprite(GNOME_X, random(5, 495), GNOMESIZE, 'k');
+    gnomeH.image = imgGnome;
+    imgGnome.resize(GNOMESIZE, GNOMESIZE);
     gnomeH.color = 'red';
-    gnomeH.image = (imgGnome);
-    imgGnome.resize(GNOMESIZE,GNOMESIZE);
-    gnomeH.vel.x = random(GNOMESPEED);
+    gnomeH.vel.x = random(GNOMESPEED) + random(-1, 1);
     gnomesH.push(gnomeH);
+
     console.log("status:" + gnomeH);
   }
 }
@@ -124,16 +145,18 @@ function gnomeDetectV() {
 function gnomeMakerV() {
   console.log("this is running");
   for (let i = gnomesV.length; i < 5; i++) { // Keep spawning until we have 5 gnomes
-    let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k'); // Spawn at the top\
-    gnomeV.image = (imgGnome);
-    imgGnome.resize(GNOMESIZE,GNOMESIZE);
+    let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k');
+    gnomeV.image = imgGnome;
+    imgGnome.resize(GNOMESIZE, GNOMESIZE);
     gnomeV.color = 'blue';
-    gnomeV.vel.y = random(GNOMESPEED);
+    gnomeV.vel.y = random(GNOMESPEED) + random(-1, 1);
     gnomesV.push(gnomeV);
+
     console.log("status:" + gnomeV);
   }
 }
-
+/**************************************************************************************/
+//DISPLAY FUNCTIONS
 function displayScore() {
   fill(0, 0, 0);
   textSize(20);
@@ -153,6 +176,37 @@ function displayTimer() {
     winGame();
   }
 }
+/*********************************************************************************/
+//GAME SCREEN FUNCTIONS
+function gameSetup() {
+  console.log("setting up game");
+  console.log("Stickman:", stickman);
+  console.log("Lwall:", Lwall); // Debugging log
+  gameState = "setup";
+  stickman = new Sprite((GAMEWIDTH / 2), (GAMEHEIGHT / 2), PLAYERSIZE, PLAYERSIZE, 'd');
+  stickman.color = 'black';
+  stickman.image = (imgPlayer);
+  imgPlayer.resize(PLAYERSIZE + 5, PLAYERSIZE + 5);
+
+  Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
+  Lwall.color = 'black';
+
+  Rwall = new Sprite(500, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
+  Rwall.color = 'black';
+
+  Twall = new Sprite((GAMEWIDTH / 2), 0, GAMEWIDTH, 5, 'k');
+  Twall.color = 'black';
+
+  Bwall = new Sprite((GAMEWIDTH / 2), 500, GAMEWIDTH, 5, 'k');
+  Bwall.color = 'black';
+
+  gameOver = false;
+  score = 0;
+  startTime = millis(); // Reset timer
+
+  gameState = "start";
+  console.log("Game state after setup:", gameState); // Checking if gameState swaps to "start"
+}
 
 function startScreen() {
   console.log("startScreen")
@@ -168,15 +222,11 @@ function startScreen() {
   text("Instructions: The aim of the game is \nto dodge as many gnomes as you \ncan for 15 seconds, moving with the \narrow OR WASD keys. \nPress Enter To Start.",
     width / 2, height / 3 + 200,);
 
-if(key === " " || key === "Enter"){
-  console.log("game started!");
-  startGame();
+  if (key === " " || key === "Enter") {
+    console.log("game started!");
+    startGame();
+  }
 }
-
-
-}
-
-
 function startGame() {
   background("white");
   gameState = 'playing';
@@ -184,10 +234,10 @@ function startGame() {
 }
 
 function runGame() {
+  image(imgBG, 0, 0, GAMEWIDTH, GAMEHEIGHT);
   gnomeMakerH();
   gnomeMakerV();
   console.log("gnomes have been spawned");
-  background('white');
   movement();
   gnomeDetectH();
   gnomeDetectV();
@@ -195,23 +245,6 @@ function runGame() {
   displayTimer();
   gnomeTouch();
 }
-
-function gnomeTouch() {
-  for (let i = 0; i < gnomesH.length; i++) {
-    if (stickman.collide(gnomesH[i])) {
-      endGame(); // End the game if collision detected
-      return;
-    }
-  }
-
-  for (let i = 0; i < gnomesV.length; i++) {
-    if (stickman.collide(gnomesV[i])) {
-      endGame(); // End the game if collision detected
-      return;
-    }
-  }
-}
-
 function winGame() {
   if (gameOver) return; // Prevent running multiple times
 
@@ -245,7 +278,7 @@ function endGame() {
   textSize(15);
   textAlign(CENTER, CENTER);
   text("You died after " + elapsedTime + "s, and dodged " + score + " gnomes!", GAMEWIDTH / 2, GAMEHEIGHT / 2);
-  text("Press R to restart", GAMEWIDTH/ 2, GAMEHEIGHT / 2 + 50);
+  text("Press R to restart", GAMEWIDTH / 2, GAMEHEIGHT / 2 + 50);
   stickman.remove();
   for (let i = 0; i < gnomesH.length; i++) {
     gnomesH[i].remove();
@@ -272,47 +305,13 @@ function restartGame() {
   background("white");
   gameOver = false;
   allSprites.remove();
-  
+
   gameSetup();
   loop();
 }
-
-function gameSetup() {
-  console.log("setting up game");
-  console.log("Stickman:", stickman);
-  console.log("Lwall:", Lwall); // Debugging log
-  gameState = "setup"; 
-  stickman = new Sprite((GAMEWIDTH / 2), (GAMEHEIGHT / 2), PLAYERSIZE, PLAYERSIZE, 'd');
-  stickman.color = 'black';
-  stickman.image = (imgPlayer);
-  imgPlayer.resize(PLAYERSIZE + 5,PLAYERSIZE + 5);
-
-  Lwall = new Sprite(0, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
-  Lwall.color = 'black';
-
-  Rwall = new Sprite(500, (GAMEHEIGHT / 2), 5, GAMEHEIGHT, 'k');
-  Rwall.color = 'black';
-
-  Twall = new Sprite((GAMEWIDTH / 2), 0, GAMEWIDTH, 5, 'k');
-  Twall.color = 'black';
-
-  Bwall = new Sprite((GAMEWIDTH / 2), 500, GAMEWIDTH, 5, 'k');
-  Bwall.color = 'black';
-
-  gameOver = false;
-  score = 0;
-  startTime = millis(); // Reset timer
-  
-  gameState = "start";
-  console.log("Game state after setup:", gameState); // Checking if gameState swaps to "start"
-}
-
+/****************************************************************************/
 /*******************************************************/
 //TO DO
-
-// function getElapsedTime() {
-// return floor((millis() - startTime) / 1000);
-//}
 /*******************************************************/
 //END OF GAME
 /*******************************************************/

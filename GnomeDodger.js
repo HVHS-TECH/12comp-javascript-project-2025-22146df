@@ -44,7 +44,7 @@ function preload() {
 
 function setup() {
   cnv = new Canvas(GAMEWIDTH, GAMEHEIGHT);
-  gameSetup();
+  gameSetup();  
 }
 /*******************************************************************************************/
 //GAME
@@ -221,11 +221,22 @@ function startScreen() {
   textSize(20);
   text("Instructions: The aim of the game is \nto dodge as many gnomes as you \ncan for 15 seconds, moving with the \narrow OR WASD keys. \nPress Enter To Start.",
     width / 2, height / 3 + 200,);
+}
 
-  if (key === " " || key === "Enter") {
-    console.log("game started!");
+function checkKey(_keyPressed) {
+  if (_keyPressed === " " || _keyPressed === "Enter") {
+    console.log("Game Started!");
     startGame();
   }
+  else if (_keyPressed === 'r' || _keyPressed === 'R') {
+    console.log("Game Restarted!");
+    restartGame();
+  }
+}
+
+function keyPressed() {
+  checkKey(key);
+
 }
 function startGame() {
   background("white");
@@ -293,14 +304,6 @@ function endGame() {
   noLoop(); // found noLoop and Loop through GPT
 
 }
-
-
-function keyPressed() {
-  if (key === 'r' || key === 'R') { //R = restart button
-    restartGame();
-  }
-}
-
 function restartGame() {
   background("white");
   gameOver = false;

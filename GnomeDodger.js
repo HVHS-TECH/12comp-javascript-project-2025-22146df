@@ -37,9 +37,9 @@ var gnomesV = [];
 //SETUP
 
 function preload() {
-  imgPlayer = loadImage('/images/stickmangame.png');
-  imgGnome = loadImage('/images/gnome.png');
-  imgBG = loadImage('/images/Grassbg.jpg')
+  imgPlayer = loadImage('images/stickmangame.png');
+  imgGnome = loadImage('images/gnome.png');
+  imgBG = loadImage('images/Grassbg.jpg')
 }
 
 function setup() {

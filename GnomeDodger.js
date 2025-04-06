@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [1, 2, 2.5, 4, 5, 6, 7, 8, 9, 10,];
+const GNOMESPEED = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,];
 const WALLTHICK = 5;
 
 let gnomex;
@@ -23,7 +23,7 @@ let score = 0;
 let stickman;
 let Lwall;
 var startTime;
-var timeLimit = 5;
+var timeLimit = 15;
 var remainingTime;
 var elapsedTime;
 

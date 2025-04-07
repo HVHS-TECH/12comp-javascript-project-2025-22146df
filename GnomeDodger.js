@@ -108,7 +108,7 @@ function gnomeTouch() {
 //GNOME FUNCTIONS
 function gnomeMakerH() {
   console.log("this is running");
-  for (let i = gnomesH.length; i < 10; i++) { // Keep spawning until we have 5 gnomes
+  for (let i = gnomesH.length; i < 10; i++) { // Keep spawning until we have 10 gnomes
     let gnomeH = new Sprite(GNOME_X, random(5, 495), GNOMESIZE, 'k');
     gnomeH.image = imgGnome;
     imgGnome.resize(GNOMESIZE, GNOMESIZE);
@@ -127,7 +127,7 @@ function gnomeDetectH() {
       score++;
     }
   }
-  gnomeMakerH(); // Ensure 5 gnomes exist after checking
+  gnomeMakerH(); // Ensure 10 gnomes exist after checking
 
 }
 
@@ -139,12 +139,12 @@ function gnomeDetectV() {
       score++;
     }
   }
-  gnomeMakerV(); // Ensure 5 gnomes exist after checking
+  gnomeMakerV(); // Ensure 10 gnomes exist after checking
 
 }
 function gnomeMakerV() {
   console.log("this is running");
-  for (let i = gnomesV.length; i < 10; i++) { // Keep spawning until we have 5 gnomes
+  for (let i = gnomesV.length; i < 10; i++) { // Keep spawning until we have 10 gnomes
     let gnomeV = new Sprite(random(5, 495), GNOME_Y, GNOMESIZE, 'k');
     gnomeV.image = imgGnome;
     imgGnome.resize(GNOMESIZE, GNOMESIZE);

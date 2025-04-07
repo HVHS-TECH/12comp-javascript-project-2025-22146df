@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,];
+const GNOMESPEED = [1, 2, 3, 4, 5, 6, 5, 6, 5, 6,  7, 8, 9, 10,];
 const WALLTHICK = 5;
 
 let gnomex;

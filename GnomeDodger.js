@@ -13,7 +13,7 @@ const PLAYERSPEED = 5;
 const GNOMESIZE = 20;
 const GNOME_Y = 10;
 const GNOME_X = 10;
-const GNOMESPEED = [1, 2, 3, 4, 5, 6, 5, 6, 5, 6,  7, 8, 9, 10,];
+const GNOMESPEED = [1, 2, 3, 4, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6, 5, 5, 6, 5,9,10,10];
 const WALLTHICK = 5;
 
 let gnomex;
@@ -224,11 +224,11 @@ function startScreen() {
 }
 
 function checkKey(_keyPressed) {
-  if (_keyPressed === " " || _keyPressed === "Enter") {
+  if (( _keyPressed === " " || _keyPressed === "Enter") && gameState === "start") {
     console.log("Game Started!");
     startGame();
   }
-  else if (_keyPressed === 'r' || _keyPressed === 'R') {
+  else if (_keyPressed === 'r' || _keyPressed === 'R' ) {
     console.log("Game Restarted!");
     restartGame();
   }
@@ -298,6 +298,7 @@ function endGame() {
   for (let i = 0; i < gnomesV.length; i++) {
     gnomesV[i].remove();
   }
+
   gnomesV = [];
 
 
